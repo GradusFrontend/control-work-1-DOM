@@ -14,17 +14,6 @@
 
 'use strict';
 
-
-const movieDB = {
-    movies: [
-        "Логан",
-        "Лига справедливости",
-        "Ла-ла лэнд",
-        "Одержимость",
-        "Скотт Пилигрим против..."
-    ]
-};
-
 // let sorted = movieDB.movies.sort()
 
 let addChilds = document.querySelectorAll('.promo__adv div, img')
@@ -40,34 +29,39 @@ bg.style.background = `url("./img/bg.jpg") no-repeat center / cover`
 
 let listBox = document.querySelector('.promo__interactive-list')
 
+let title = document.querySelector('.promo__title')
+let imdb = document.querySelector('.imdb')
+let kinopoisk = document.querySelector('.kinopoisk')
+let descr = document.querySelector('.promo__descr')
 
-for (let item of movieDB.movies.sort()) {
-    let idx = movieDB.movies.sort().indexOf(item) + 1
-    let list = document.createElement('li')
-    let deleteDiv = document.createElement('div')
+function reload () {
+    listBox.innerHTML = ''
+    for (let item of movies) {
+        let idx = movies.sort().indexOf(item) + 1
+        let list = document.createElement('li')
+        let deleteDiv = document.createElement('div')
+    
+        list.classList.add('promo__interactive-item')
+        deleteDiv.classList.add('delete')
+    
+        listBox.append(list)
+        list.append(idx + '. ' + item.Title)
+        list.append(deleteDiv)
 
-    list.classList.add('promo__interactive-item')
-    deleteDiv.classList.add('delete')
+        list.onclick = () => {
+            bg.style.background = `url(${item.Poster}) no-repeat center / cover`
+            janre.innerHTML = item.Genre
+            title.innerHTML = item.Title
+            descr.innerHTML = item.Plot
+            imdb.innerHTML = 'IMDb: ' + item.imdbRating
+            kinopoisk.innerHTML = 'Кинопоиск: ' + item.Metascore
+        }
 
-    listBox.append(list)
-    list.append(idx + '. ' + item)
-    list.append(deleteDiv)
+        deleteDiv.onclick = () => {
+            movies.splice(idx - 1, 1)
+            reload()
+        }
+    }
 }
 
-let deleteDivs = document.querySelectorAll('.delete')
-let lists = document.querySelectorAll('.promo__interactive-item')
-
-deleteDivs.forEach((item, idx) => {
-    item.onclick = () => {
-        lists[idx].remove()
-        // numeration()
-    }
-})
-    
-
-// function numeration() {
-//     let listFunc = document.querySelectorAll('.promo__interactive-item')
-//     for (let i = 0; i < listFunc.length; i++) {
-//         listFunc[i].innerHTML = i + 1 + '. ' + sorted[i]
-//     }
-// }
+reload()
